@@ -1,0 +1,26 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-diNkOBtn.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/Components/municipalities.json": {
+    "file": "assets/municipalities-BRj0ynXD.js",
+    "name": "municipalities",
+    "src": "resources/js/Components/municipalities.json",
+    "isDynamicEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-N3pDYOst.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/Components/municipalities.json"
+    ],
+    "css": [
+      "assets/app-BH9vjAHm.css",
+      "assets/app-diNkOBtn.css"
+    ]
+  }
+}
