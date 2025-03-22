@@ -85,13 +85,7 @@ onBeforeUnmount(() => {
       :style="{ backgroundImage: `url(${homeImg})` }"></Container> -->
 
         <div class="absolute inset-0 bg-black opacity-40"></div>
-        <div class="relative z-10 mb-8 text-center">
-            <Title class="text-center justify-center font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-slate-100">
-                {{ companyName.toUpperCase() }}
-            </Title>
-        </div>
-
-        <!-- Navigation Arrows -->
+       <!-- Navigation Arrows -->
         <div class="absolute left-1 top-1/2 transform -translate-y-1/2 z-20"> <!-- Add z-index here -->
             <button @click="changeImage(-1)" class="p-4 text-white bg-black bg-opacity-50 hover:bg-opacity-75 transition text-4xl">
                 &lt; <!-- Left Arrow -->
@@ -106,26 +100,19 @@ onBeforeUnmount(() => {
         <!-- Main Description -->
         <div class="relative z-10 grid grid-cols-1 gap-8 mb-10 pb-10 px-4 sm:px-8 md:px-12">
             <p class="text-center justify-center font-bold text-2xl text-slate-100">
-                Environmental Consulting for residential and commercial buildings.
+                
             </p>
-            <p class="text-center justify-center font-bold text-2xl text-slate-100 mb-10 pb-4">
-                NEW JERSEY & NEW YORK.
-            </p>
-            <p class="text-center justify-center font-bold text-xl text-slate-100 pb-5">
-                Our Inspection Certificates are accepted in all Municipalities.
-            </p>
+            
             <p class="text-center justify-center font-bold text-2xl text-slate-100"> 
                 <!-- There are fines for failing a lead paint inspection, filing late, or failing to file. To ensure compliance with the new lead regulations;<br>
                 Book your lead inspection Now. -->
-                There are fines for failing to complete a lead-based paint inspection for pre-1978 rental properties. To ensure compliance with the new lead regulations;<br>
+                Insured & Certified Lead Evaluation Firm for residential and commercial buildings.<br>
                 Book your lead inspection Now.
             </p>
 
             <!-- New Button Row for NJ and NY Inspection -->
             <div class="flex flex-col items-center mb-2">
-                <p class="text-center font-medium text-2xs text-slate-100 mb-2">
-                    [Our pricing match any competitors price in the state of NJ and NY.]
-                </p>
+                
                 <div class="flex space-x-4">
                     <button @click="submitService(services[0].name)" class="p-4 font-bold text-white bg-green-600 hover:bg-green-800 transition">
                         NJ LEAD INSPECTIONS
