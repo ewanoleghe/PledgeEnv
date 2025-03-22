@@ -64,7 +64,7 @@ onMounted(() => {
   // Change the image every 3 seconds
   intervalId = setInterval(() => {
     changeImage(1); // Move to the next image automatically
-  }, 3000); // 3000ms = 3 seconds
+  }, 6000); // 6000ms = 6 seconds
 });
 
 onBeforeUnmount(() => {
