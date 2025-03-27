@@ -126,7 +126,7 @@ const submit = () => {
     console.log('Form data before submission:', form);
 
     // Send the form payload to the backend
-    form.post(route('request.time'), { method: 'POST' })
+    form.post(route('service.time'), { method: 'POST' })
       .then(response => {
         console.log('Form submitted successfully:', response);
       })

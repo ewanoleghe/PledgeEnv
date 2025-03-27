@@ -25,7 +25,7 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/bookings', [BookingController::class, 'indexAll'])->name('bookings');
-    Route::post('/bookings/update_payment_status', [BookingController::class, 'updatePaymentStatus'])->name('bookings.update_payment_status');
+    Route::post('/bookings/update_payment_status', [BookingController::class, 'updatePaymentStatus'])->name('bookings.update_pay_status');
     Route::get('/viewBooking/{id}', [BookingController::class, 'viewApplication'])->name('viewBooking');  // View a registration using id 
     Route::get('/updateBooking/{id}', [BookingController::class, 'getUpdateBooking'])->name('bookings.get_update'); // Get Update booking
     Route::patch('/updateBooking/{id}', [BookingController::class, 'updateBooking'])->name('update_postBooking');

@@ -78,48 +78,45 @@ onBeforeUnmount(() => {
     
     <!-- First Container with Dynamic Background Image -->
     <Container 
-      class="w-full bg-cover bg-center relative sm:bg-contain sm:min-h-[400px] md:min-h-[700px] sm:w-full" 
-      :style="currentImageStyle">
-    <!-- <Container 
-      class="w-full bg-cover bg-center relative sm:bg-contain sm:min-h-[400px] md:min-h-[700px] sm:w-full" 
-      :style="{ backgroundImage: `url(${homeImg})` }"></Container> -->
-
-        <div class="absolute inset-0 bg-black opacity-40"></div>
-       <!-- Navigation Arrows -->
-        <div class="absolute left-1 top-1/2 transform -translate-y-1/2 z-20"> <!-- Add z-index here -->
+        class="w-full bg-cover bg-center relative sm:bg-contain sm:min-h-[400px] md:min-h-[700px] sm:w-full flex flex-col justify-end" 
+        :style="currentImageStyle">
+        
+        <div class="absolute inset-0"></div>
+        
+        <!-- Navigation Arrows -->
+        <div class="absolute left-1 top-1/2 transform -translate-y-1/2 z-20"> 
             <button @click="changeImage(-1)" class="p-4 text-white bg-black bg-opacity-50 hover:bg-opacity-75 transition text-4xl">
                 &lt; <!-- Left Arrow -->
             </button>
         </div>
-        <div class="absolute right-1 top-1/2 transform -translate-y-1/2 z-20"> <!-- Add z-index here -->
+        <div class="absolute right-1 top-1/2 transform -translate-y-1/2 z-20"> 
             <button @click="changeImage(1)" class="p-4 text-white bg-black bg-opacity-50 hover:bg-opacity-75 transition text-4xl">
                 &gt; <!-- Right Arrow -->
             </button>
         </div>
 
         <!-- Main Description -->
-        <div class="relative z-10 grid grid-cols-1 gap-8 mb-10 pb-10 px-4 sm:px-8 md:px-12">
-            <p class="text-center justify-center font-bold text-2xl text-slate-100">
-                
-            </p>
+        <div class="relative z-10 grid grid-cols-1 gap-8 pb-52 px-4 sm:px-8 md:px-12"> <!-- Adjusted padding-bottom -->
             
-            <p class="text-center justify-center font-bold text-2xl text-slate-100"> 
-                <!-- There are fines for failing a lead paint inspection, filing late, or failing to file. To ensure compliance with the new lead regulations;<br>
-                Book your lead inspection Now. -->
-                Insured & Certified Lead Evaluation Firm for residential and commercial buildings.<br>
-                Book your lead inspection Now.
-            </p>
+            <div class="bg-black bg-opacity-40 p-4 rounded-md mx-auto">
+                <p class="text-center justify-center font-bold text-2xl text-slate-100">                
+                </p>
 
-            <!-- New Button Row for NJ and NY Inspection -->
-            <div class="flex flex-col items-center mb-2">
-                
-                <div class="flex space-x-4">
-                    <button @click="submitService(services[0].name)" class="p-4 font-bold text-white bg-green-600 hover:bg-green-800 transition">
-                        NJ LEAD INSPECTIONS
-                    </button>
-                    <button @click="submitService(services[1].name)" class="p-4 font-bold text-white bg-green-600 hover:bg-green-800 transition">
-                        NY LEAD INSPECTIONS
-                    </button>
+                <p class="text-center justify-center font-bold text-2xl text-slate-100"> 
+                    Insured & Certified Lead Evaluation Firm for residential and commercial buildings.<br><br>
+                    Book your lead inspection Now.
+                </p>
+
+                <!-- New Button Row for NJ and NY Inspection -->
+                <div class="flex flex-col items-center mt-2 mb-2">
+                    <div class="flex space-x-4">
+                        <button @click="submitService(services[0].name)" class="p-4 font-bold text-white bg-green-600 hover:bg-green-800 transition">
+                            NJ LEAD INSPECTIONS
+                        </button>
+                        <button @click="submitService(services[1].name)" class="p-4 font-bold text-white bg-green-600 hover:bg-green-800 transition">
+                            NY LEAD INSPECTIONS
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -441,4 +438,3 @@ onBeforeUnmount(() => {
     </div>
 </Container>
 </template>
-

@@ -17,7 +17,7 @@ Route::get('service/request', [ScheduleController::class, 'RequestService'])->na
 Route::post('service/request', [ScheduleController::class, 'handleSingleRequestDate']);
 
 Route::get('/service/time', [ScheduleController::class, 'ScheduleDate'])->name('request.time');
-Route::post('/service/time', [ScheduleController::class, 'handleSingleRequestTime'])->name('request.time');
+Route::post('/service/time', [ScheduleController::class, 'handleSingleRequestTime'])->name('service.time');
 
 Route::get('/service/requested', [ScheduleController::class, 'getSingleRequestData'])->name('service.requested');
 Route::post('/service/requested', [ScheduleController::class, 'handleSingleRequestData'])->name('service.requested');

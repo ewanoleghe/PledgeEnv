@@ -84,8 +84,8 @@ class StripePaymentController extends Controller
                 'apt' => 'nullable|string', // Apt is optional, but if provided, it should be a string
                 'city' => 'required|string', // Ensures city is a string
                 'state' => 'required|string', // Ensures state is a string
-                'block' => 'required|numeric', // Ensures block is a number
-                'lot' => 'required|numeric', // Ensures lot is a number
+                'block' => 'nullable|numeric', // Ensures block is a number
+                'lot' => 'nullable|numeric', // Ensures lot is a number
                 'units' => 'required|integer|min:1', // Ensures units is a positive integer
                 'builtBefore1978' => 'required|string|in:before,after', // Ensures builtBefore1978 is either "before" or "after"
                 'useSameContactForAll' => 'required|boolean', // Ensures useSameContactForAll is a boolean

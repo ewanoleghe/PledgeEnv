@@ -13,7 +13,6 @@ defineOptions({ layout: AdminLayout });
 const props = defineProps({
     bookings: Object,
     searchTerm: String,
-    pageName: String,
 });
 
 // Reactive search term
@@ -32,7 +31,7 @@ watch(
 const updatePaymentStatus = async (id) => {
     try {
         // Send a POST request to update the payment status while preserving scroll
-        await router.post('bookings/update_payment_status', { id }, { preserveScroll: true });
+        await router.post('bookings/update_pay_status', { id }, { preserveScroll: true });
     } catch (error) {
         console.error('Error updating payment status:', error);
     }
@@ -45,7 +44,7 @@ const updatePaymentStatus = async (id) => {
     <Head title="- Select a payment method" />
     <Container class="w-full max-w-4xl mx-auto">
         <div class="mb-8 text-center w-full">
-            <Title>All Lead Bookings: <span v-if="props.pageName" >{{ pageName }}</span></Title>
+            <Title>All Lead Bookings</Title>
         </div>
         <hr class="border-t-2 border-black w-full"> <!-- Added w-full here -->
 
@@ -53,7 +52,7 @@ const updatePaymentStatus = async (id) => {
             <div class="flex flex-col md:flex-row justify-center space-x-0 md:space-x-4 h-full w-full"> <!-- Added w-full here -->
                 <div class="w-full flex flex-col justify-between mb-4 md:mb-0">
                     <div class="p-1 flex-grow">
-                        <h2 class="text-xl font-bold p-1">All Lead Booking <span v-if="props.pageName" >{{ pageName }}</span></h2>
+                        <h2 class="text-xl font-bold p-1">All Lead Booking</h2>
                         <hr class="border-t-2 border-black p-1 w-full"> <!-- Added w-full here to match the hr width -->
 
                         <!-- Form Goes Here -->
@@ -95,7 +94,7 @@ const updatePaymentStatus = async (id) => {
                             </div>
                             <div class="flex items-center">
                                 <input id="completed" class="form-checkbox w-4 h-4 bg-green-500 text-white border-gray-700 rounded-full" />
-                                <label for="completed" class="ml-2 text-black">Completed & Documents Uploaded</label>
+                                <label for="completed" class="ml-2 text-black">Completed & report sent</label>
                             </div>
 
                             </div> 
@@ -167,7 +166,9 @@ const updatePaymentStatus = async (id) => {
                                                 </button>
                                             </td>
                                             <td class="bg-orange-200 text-black text-center text-xs font-bold border p-2 border-black">
-                                                <Link :href="route('admin.viewBooking', { id: eData.id })" 
+                                                <Link :href="route('admin.viewBooking')" 
+                                                    method="post"
+                                                    :data="{ id: eData.id }"
                                                     as="button"
                                                     type="button"
                                                     class="text-black">
