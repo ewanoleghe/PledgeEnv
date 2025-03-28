@@ -49,8 +49,8 @@ return new class extends Migration
             $table->string('apt')->nullable();
             $table->string('city');
             $table->string('state');
-            $table->integer('block');
-            $table->integer('lot');
+            $table->integer('block')->nullable();
+            $table->integer('lot')->nullable();
             $table->integer('units');
             $table->string('builtBefore1978');
             $table->boolean('useSameContactForAll');
