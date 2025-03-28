@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use PDF; // Import the PDF facade from the package
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class PdfGenerator
 {
