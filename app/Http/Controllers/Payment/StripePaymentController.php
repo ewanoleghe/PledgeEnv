@@ -214,69 +214,69 @@ class StripePaymentController extends Controller
             // \Mail::to($validated['email'])->send(new InvoiceMail($validated, $pdfPath));
 
             \Mail::to($validated['email'])
-    ->cc(env('COMPANY_EMAIL')) // Send a copy to the company email
-    ->send(new InvoiceMail($validated, $pdfPath));
+        ->cc(env('COMPANY_EMAIL')) // Send a copy to the company email
+        ->send(new InvoiceMail($validated, $pdfPath));
 
-            $message = 'unpaid';
+                $message = 'unpaid';
 
-            // Redirect to the success page
-            return Inertia::render('Payment/Success', [
-                'eData' => $validated, // Passing the validated data for Vue component to use
-                'message' => $message,
-                'status' => 'unpaid', // This can be modified as needed
-            ]);
-            } else {
-                // Handle Stripe payment
+                // Redirect to the success page
+                return Inertia::render('Payment/Success', [
+                    'eData' => $validated, // Passing the validated data for Vue component to use
+                    'message' => $message,
+                    'status' => 'unpaid', // This can be modified as needed
+                ]);
+                } else {
+                    // Handle Stripe payment
 
-            // Initialize Stripe with your secret key
-            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+                // Initialize Stripe with your secret key
+                Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
-            // Collect billing address data from the validated input
-            // $billingDetails = [
-            //     'name' => $validated['name'],
-            //     'email' => $validated['email'],
-            //     'address' => [
-            //         'line1' => $validated['address'],
-            //         'city' => $validated['city'],
-            //         'state' => $validated['state'],
-            //         // 'postal_code' => $validated['postalCode'], // Make sure to collect the postal code in the form
-            //         'country' => 'US', // You can dynamically set the country if needed
-            //     ],
-            // ];
+                // Collect billing address data from the validated input
+                // $billingDetails = [
+                //     'name' => $validated['name'],
+                //     'email' => $validated['email'],
+                //     'address' => [
+                //         'line1' => $validated['address'],
+                //         'city' => $validated['city'],
+                //         'state' => $validated['state'],
+                //         // 'postal_code' => $validated['postalCode'], // Make sure to collect the postal code in the form
+                //         'country' => 'US', // You can dynamically set the country if needed
+                //     ],
+                // ];
 
-            // Create a Stripe customer
-            $customer = \Stripe\Customer::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'phone' => $validated['phone'], // Optional, if you'd like to include phone
-                // 'address' => $billingDetails['address'], // Include address details
-            ]);
+                // Create a Stripe customer
+                $customer = \Stripe\Customer::create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'phone' => $validated['phone'], // Optional, if you'd like to include phone
+                    // 'address' => $billingDetails['address'], // Include address details
+                ]);
 
-            // Create a PaymentIntent for the total amount, now linked to the customer
-            $paymentIntent = \Stripe\PaymentIntent::create([
-                'amount' => $validated['totalPay'] * 100, // Convert to smallest currency unit (cents)
-                'currency' => 'usd',
-                'description' => $validated['service'],
-                'customer' => $customer->id, // Link payment to the created customer
-                'metadata' => [ // Add this metadata section
-        'order_id' => $orderId,
-        'booking_request_id' => $bookingRequest->id
-    ],
-            ]);
+                // Create a PaymentIntent for the total amount, now linked to the customer
+                $paymentIntent = \Stripe\PaymentIntent::create([
+                    'amount' => $validated['totalPay'] * 100, // Convert to smallest currency unit (cents)
+                    'currency' => 'usd',
+                    'description' => $validated['service'],
+                    'customer' => $customer->id, // Link payment to the created customer
+                    'metadata' => [ // Add this metadata section
+            'order_id' => $orderId,
+            'booking_request_id' => $bookingRequest->id
+        ],
+                ]);
 
-            // Save the payment intent in the BookingRequest
-        $bookingRequest->payment_intent = $paymentIntent->id; // Save the payment intent ID
-        $bookingRequest->save(); // Commit the change to the database
+                // Save the payment intent in the BookingRequest
+            $bookingRequest->payment_intent = $paymentIntent->id; // Save the payment intent ID
+            $bookingRequest->save(); // Commit the change to the database
 
-            // Return Inertia response with payment details
-            return Inertia::render('Payment/Payment', [
-                'eData' => $validated, // Passing the validated data for Vue component to use
-                'clientSecret' => $paymentIntent->client_secret, // Pass clientSecret for Stripe
-                'bookingRequestId' => $bookingRequest->id, // Pass the BookingRequest ID for tracking
-                'orderId' => $orderId, // Pass the orderId to the next page
-            ]);
-        }
-}
+                // Return Inertia response with payment details
+                return Inertia::render('Payment/Payment', [
+                    'eData' => $validated, // Passing the validated data for Vue component to use
+                    'clientSecret' => $paymentIntent->client_secret, // Pass clientSecret for Stripe
+                    'bookingRequestId' => $bookingRequest->id, // Pass the BookingRequest ID for tracking
+                    'orderId' => $orderId, // Pass the orderId to the next page
+                ]);
+            }
+    }
 
     // Helper function to generate a unique 7-digit order ID
     private function generateUniqueOrderId()

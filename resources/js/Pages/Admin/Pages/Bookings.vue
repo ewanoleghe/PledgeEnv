@@ -166,9 +166,8 @@ const updatePaymentStatus = async (id) => {
                                                 </button>
                                             </td>
                                             <td class="bg-orange-200 text-black text-center text-xs font-bold border p-2 border-black">
-                                                <Link :href="route('admin.viewBooking')" 
+                                                <Link :href="route('admin.viewBooking'), { id: eData.id }"   
                                                     method="post"
-                                                    :data="{ id: eData.id }"
                                                     as="button"
                                                     type="button"
                                                     class="text-black">
