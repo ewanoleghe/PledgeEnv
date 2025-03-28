@@ -32,7 +32,15 @@ class PdfGenerator
     {
         $view = $this->getPdfView($data);
 
+        // Ensure the filename doesn’t already have .pdf
+        $fileName = rtrim($fileName, '.pdf'); // Remove .pdf if present
         $filePath = $this->getFilePath($fileName, $view);
+
+        // Create the directory if it doesn’t exist
+        $directory = dirname($filePath);
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true, true);
+        }
 
         $pdf = PDF::loadView($view, compact('data'));
         $pdf->save($filePath);
