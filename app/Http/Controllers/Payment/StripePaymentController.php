@@ -205,7 +205,7 @@ class StripePaymentController extends Controller
             if ($validated['selectedPaymentMethod'] === "MANUAL") {
 
             // Assuming $orderId is the unique order ID you generated earlier
-            $pdfFileName = "invoice_{$orderId}.pdf"; // Create a unique file name based on the order number
+            $pdfFileName = "invoice_{$orderId}"; // Create a unique file name based on the order number
 
             // Create PDF invoice and store the path
             $pdfPath = $this->pdfGenerator->saveInvoice($validated, $pdfFileName);  // 'invoice' PDF file name
