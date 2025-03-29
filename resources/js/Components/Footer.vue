@@ -59,7 +59,7 @@
 
       <!-- Developer Section -->
       <div class="text-center mt-4 text-sm">
-        <p><a href="https://ewanoleghe.github.io/" target="_blank" class="text-white hover:text-indigo-300">Developed by EnY 
+        <p><a href="https://ewanoleghe.github.io/" target="_blank" class="text-white hover:text-indigo-300">Design and Development: EnY 
           <i class="fa-brands fa-github"></i> GitHub</a></p>
       </div>
     </div>

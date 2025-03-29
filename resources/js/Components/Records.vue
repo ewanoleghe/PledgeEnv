@@ -16,8 +16,8 @@ const props = defineProps({
 });
 
 const clearFilePreviews = () => {
-    // Clear the file previews
-    filePreviews = {};  // or use a more specific logic to clear the previews if needed
+    filePreviews.value = {};
+    Object.values(filePreviews.value).forEach(url => URL.revokeObjectURL(url));
 };
 
 const reloadPage = () => {
