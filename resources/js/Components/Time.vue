@@ -256,7 +256,7 @@ const submitForm = () => {
               <button
                 type="button"
                 :class="[
-                  form.builtBefore1978 === 'before' ? 'bg-gray-500 text-white' : 'bg-blue-200 text-gray-700',
+                  form.builtBefore1978 === 'before' ? 'bg-blue-500 text-white' : 'bg-blue-200 text-gray-700',
                   'px-4 py-2 rounded-md'
                 ]"
                 @click="setBuiltBefore1978('before')"
