@@ -246,22 +246,22 @@ const submitForm = () => {
               <button
                 type="button"
                 :class="[
-                  form.builtBefore1978 === 'after' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700',
-                  'px-4 py-2 rounded-md'
-                ]"
-                @click="setBuiltBefore1978('after')"
-              >
-                No, built after 1978
-              </button>
-              <button
-                type="button"
-                :class="[
                   form.builtBefore1978 === 'before' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700',
                   'px-4 py-2 rounded-md'
                 ]"
                 @click="setBuiltBefore1978('before')"
               >
                 Yes, built before 1978
+              </button>
+              <button
+                type="button"
+                :class="[
+                  form.builtBefore1978 === 'after' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700',
+                  'px-4 py-2 rounded-md'
+                ]"
+                @click="setBuiltBefore1978('after')"
+              >
+                No, built after 1978
               </button>
             </div>
             <!-- Conditional Prompt when 'No, built after 1978' is selected -->
