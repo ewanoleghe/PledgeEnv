@@ -74,6 +74,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/uploaded', [DashboardController::class, 'bookingUploaded'])->name('dashboard.uploaded'); // Uploaded
     Route::get('/dashboard/overdue', [DashboardController::class, 'bookingOverdue'])->name('dashboard.overdue'); // Overdue
 
+    // Download Route
+    Route::get('docs/{filename}', function ($filename) {
+        // Ensure the file exists in the storage
+        $filePath = storage_path('app/public/images/Docs/' . $filename);
+        if (file_exists($filePath)) {
+            return response()->download($filePath);
+        }
+
+        return abort(404, 'File not found');
+    });
+
 });
 
 
