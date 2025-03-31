@@ -20,3 +20,14 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
+
+!storage/app/public/invoices/
+!storage/app/public/receipts/
+!storage/app/public/reports/
+!storage/app/public/json/
+!storage/app/public/json/xrf_data/
+!storage/app/public/images/
+!storage/app/public/images/Docs/
+!storage/app/public/images/inspection_photos/
+!storage/app/public/images/inspections/
+
