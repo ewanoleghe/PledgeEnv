@@ -96,14 +96,4 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
     // Logout
     Route::post('/logout', [AuthenticateController::class, 'destroy'])->name('logout');
 
-    // Download Route
-    Route::get('docs/{filename}', function ($filename) {
-        // Ensure the file exists in the storage
-        $filePath = storage_path('app/public/images/Docs/' . $filename);
-        if (file_exists($filePath)) {
-            return response()->download($filePath);
-        }
-
-        return abort(404, 'File not found');
-    });
 });
