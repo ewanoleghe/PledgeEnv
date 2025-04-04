@@ -13,6 +13,7 @@ const props = defineProps({
   clientSecret: String, // Receiving the clientSecret from the server
     bookingRequestId: Number, // Receiving the bookingRequest ID for tracking purposes
     orderId: String,
+    stripePublicKey: String,
 });
 
 // Initialize the form using the received data
@@ -165,7 +166,7 @@ onMounted(async () => {
     const clientSecret = props.clientSecret;
 
     // Load Stripe.js with your public key
-    stripe.value = await loadStripe(import.meta.env.VITE_STRIPE_KEY);
+    stripe.value = await loadStripe(props.stripePublicKey); // Use the prop instead of import.meta.env
 
     // Create the Elements instance and initialize a Payment Element with the clientSecret
     elements.value = stripe.value.elements({

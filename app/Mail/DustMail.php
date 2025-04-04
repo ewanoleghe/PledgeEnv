@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AppSetting;
 use App\Services\ReportGenerator; // PDF Service
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -63,6 +64,8 @@ class DustMail extends Mailable
     // Example Mailable class
     public function build()
     {
+        $settings = AppSetting::first();
+
         $pdfFullPath = storage_path("app/public/{$this->pdfPath}");
 
         $data = [
@@ -78,14 +81,20 @@ class DustMail extends Mailable
             \Log::error("PDF Attachment Missing: {$pdfFullPath}");
             return $this->markdown('DustMail')
                         ->subject('Lead Based Paint Inspection Report')
-                        ->with('data', $data);
+                        ->with([
+                            'data' => $data,
+                            'settings' => $settings,
+                        ]);
         }
 
         return $this->from(env('MAIL_FROM_ADDRESS'))
                     ->replyTo(env('ADMIN_EMAIL'))
                     ->subject('Dust Wipe Report: Lead Based Paint Inspection')
                     ->markdown('DustMail')
-                    ->with('data', $data)
+                    ->with([
+                        'data' => $data,
+                        'settings' => $settings,
+                    ])
                     ->attach($pdfFullPath, [
                         'as' => "Dust_Wipe_Report_{$this->record->id}.pdf",
                         'mime' => 'application/pdf',

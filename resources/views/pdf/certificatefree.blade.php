@@ -166,19 +166,19 @@
                     </tr>
                     <tr>
                         <td style="text-align: left; padding: 4px 8px;">Name of Evaluation Contractor:</td>
-                        <td style="text-align: left; padding: 4px 8px; border-bottom: 0.5px solid #000;">{{ env('APP_NAME') }}</td>
+                        <td style="text-align: left; padding: 4px 8px; border-bottom: 0.5px solid #000;">{{ $settings->app_name }}</td>
                         <td></td> <!-- Empty column for spacing -->
                         <td style="text-align: right; padding: 4px 8px;">NJDCA CERT. #:</td>
-                        <td style="text-align: left; padding: 4px 8px; border-bottom: 0.5px solid #000;">{{ env('COMPANY_NJDCA') }}</td>
+                        <td style="text-align: left; padding: 4px 8px; border-bottom: 0.5px solid #000;">{{ $settings->company_njdca }}</td>
                     </tr>
                     <tr>
                         <td style="text-align: left; padding: 4px 8px;">Address of Evaluation Contractor:</td>
                         <td style="text-align: left; padding: 4px 8px; border-bottom: 0.5px solid #000;">
-                            {{ env('COMPANY_ADDRESS') }} {{ env('COMPANY_CITY') }}, NJ {{ env('COMPANY_ZIP') }}
+                            {{ $settings->company_address }} {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}
                         </td>
                         <td></td> <!-- Empty column for spacing -->
                         <td style="text-align: right; padding: 4px 8px;">Phone:</td>
-                        <td style="text-align: left; padding: 4px 8px; border-bottom: 0.5px solid #000;">{{ env('COMPANY_PHONE') }}</td>
+                        <td style="text-align: left; padding: 4px 8px; border-bottom: 0.5px solid #000;">{{ $settings->company_phone }}</td>
                     </tr>
                 </table>
                 <table style="width: 50%; border-collapse: collapse; margin-top: 12px; font-size: 10pt;">

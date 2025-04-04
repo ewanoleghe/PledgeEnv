@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Payment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail; // Mail/
 use App\Mail\InvoiceMail;  // Mail/
 use App\Mail\ReceiptMail;  // Receipt/
@@ -13,6 +14,7 @@ use PDF; // Don't forget to import the PDF facade
 
 use App\Models\BookingRequest;
 use App\Models\UnitContact;
+use App\Models\AppSetting;
 
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
@@ -23,10 +25,12 @@ use Carbon\Carbon;
 class StripePaymentController extends Controller
 {
     protected $pdfGenerator;
+    protected $settings;
 
-    public function __construct(PdfGenerator $pdfGenerator) // Inject PdfGenerator
+    public function __construct(PdfGenerator $pdfGenerator, AppSetting $appSetting) // Inject both PdfGenerator and AppSetting
     {
         $this->pdfGenerator = $pdfGenerator;
+        $this->settings = $appSetting->first(); // Fetch the first AppSetting record
     }
 
     public function getCheckout(Request $request)
@@ -214,8 +218,8 @@ class StripePaymentController extends Controller
             // \Mail::to($validated['email'])->send(new InvoiceMail($validated, $pdfPath));
 
             \Mail::to($validated['email'])
-        ->cc(env('COMPANY_EMAIL')) // Send a copy to the company email
-        ->send(new InvoiceMail($validated, $pdfPath));
+            ->cc($this->settings->company_email ?? 'default@example.com') // Send a copy to the company email
+            ->send(new InvoiceMail($validated, $pdfPath));
 
                 $message = 'unpaid';
 
@@ -229,7 +233,7 @@ class StripePaymentController extends Controller
                     // Handle Stripe payment
 
                 // Initialize Stripe with your secret key
-                Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+                Stripe::setApiKey($this->settings->stripe_secret_key ?? env('STRIPE_SECRET_KEY'));
 
                 // Collect billing address data from the validated input
                 // $billingDetails = [
@@ -274,6 +278,8 @@ class StripePaymentController extends Controller
                     'clientSecret' => $paymentIntent->client_secret, // Pass clientSecret for Stripe
                     'bookingRequestId' => $bookingRequest->id, // Pass the BookingRequest ID for tracking
                     'orderId' => $orderId, // Pass the orderId to the next page
+                    'stripePublicKey' => $this->settings->stripe_public_key ?? env('VITE_STRIPE_KEY'), // Pass the public key from AppSetting
+            
                 ]);
             }
     }
@@ -320,26 +326,24 @@ class StripePaymentController extends Controller
             // \Mail::to($dataArray['email'])->send(new ReceiptMail($dataArray, $pdfPath));
 
             \Mail::to($dataArray['email'])
-    ->cc(env('COMPANY_EMAIL')) // Send a copy to the company email
-    ->send(new ReceiptMail($dataArray, $pdfPath));
-        }
+            ->cc($this->settings->company_email ?? 'default@example.com')
+            ->send(new ReceiptMail($dataArray, $pdfPath));
+    }
 
         return Inertia::render('Payment/Success', [
             'message' => 'Payment was successful and receipts have been sent!',
         ]);
     }
-
-    
     
     public function handleWebhook(Request $request)
     {
         // Set your Stripe secret key
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        Stripe::setApiKey($this->settings->stripe_secret_key ?? env('STRIPE_SECRET_KEY'));
 
         // Retrieve the raw body of the request
         $payload = @file_get_contents('php://input');
         $sig_header = $request->header('Stripe-Signature');
-        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET'); // Set your webhook secret key
+        $endpoint_secret = $this->settings->stripe_webhook_secret ?? env('STRIPE_WEBHOOK_SECRET');
 
         try {
             // Verify the webhook signature to ensure the request is from Stripe

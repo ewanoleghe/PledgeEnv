@@ -84,13 +84,13 @@
                                 <thead>
                                     <tr>
                                         <th style="text-align: left; font-size: 14px; padding: 1px; font-weight: normal;">
-                                            <span style="color: #d81010;">Insp/RA Name:</span> {{ env('COMPANY_Owner') }}
+                                            <span style="color: #d81010;">Insp/RA Name:</span> {{ $settings->company_owner }}
                                         </th>
                                         <th style="text-align: left; font-size: 14px; padding: 1px; font-weight: normal;">
-                                            <span style="color: #d81010;">Evaluation Contractor #:</span> {{ env('COMPANY_NJDCA') }}
+                                            <span style="color: #d81010;">Evaluation Contractor #:</span> {{ $settings->company_njdca }}
                                         </th>
                                         <th style="text-align: left; font-size: 14px; padding: 1px; font-weight: normal;">
-                                            <span style="color: #d81010;">Phone:</span> {{ env('COMPANY_PHONE') }}
+                                            <span style="color: #d81010;">Phone:</span> {{ $settings->company_phone }}
                                         </th>
                                     </tr>
                                     <tr>
@@ -115,7 +115,7 @@
                                                     </th>
                                                     <th style="width: 5%;"></th> <!-- Blank Middle Column -->
                                                     <th style="width: 25%; text-align: left; font-size: 14px; padding: 1px; font-weight: normal;">
-                                                        {{ env('COMPANY_NJDCA') }}
+                                                    {{ $settings->company_njdca }}
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -162,7 +162,7 @@
                                                         Contractor Name:
                                                     </th>
                                                     <th style="width: 60%; text-align: left; font-size: 14px; padding: 6px 0; font-weight: bold; border-bottom: 0.5px solid #000;">
-                                                        {{ env('APP_NAME') }}
+                                                    {{ $settings->app_name }}
                                                     </th>
                                                 </tr>
                                                 <tr>
@@ -170,14 +170,14 @@
                                                         Contractor Address:
                                                     </th>
                                                     <th style="width: 60%; text-align: left; font-size: 14px; padding: 6px 0; font-weight: bold; border-bottom: 0.5px solid #000;">
-                                                        {{ env('COMPANY_ADDRESS') }}
+                                                    {{ $settings->company_address }}
                                                     </th>
                                                 </tr>
                                                 <tr>
                                                     <th style="width: 40%; text-align: left; font-size: 12px; padding: 6px 0; font-weight: normal;">
                                                     </th>
                                                     <th style="width: 60%; text-align: left; font-size: 14px; padding: 6px 0; font-weight: bold; border-bottom: 0.5px solid #000;">
-                                                        {{ env('COMPANY_CITY') }}, NJ {{ env('COMPANY_ZIP') }}
+                                                    {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}
                                                     </th>
                                                 </tr>
                                                 <tr>

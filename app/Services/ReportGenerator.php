@@ -6,12 +6,14 @@ use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use setasign\Fpdi\Fpdi;
 use App\Models\Record;
+use App\Models\AppSetting;
 
 class ReportGenerator
 {
     public function generateReport($id)
     {
         $record = Record::findOrFail($id);
+        $settings = AppSetting::first(); // Fetch settings
         $pdfFiles = [];
         $certificateFiles = [];
         

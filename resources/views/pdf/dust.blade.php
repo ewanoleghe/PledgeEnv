@@ -229,16 +229,15 @@
 </head>
 
 <body>
-    <div class="container">
+<div class="container">
         <div class="text-right">
             <div class="logo-container">
                 <img src="{{ public_path('images/logo.png') }}" alt="Company Logo" style="width: 200px; height: auto;">
                 <div class="company-info"><p>
-                    {{-- {{ env('APP_NAME') }}<br> --}}
-                    {{ env('COMPANY_ADDRESS') }}<br>
-                    {{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}<br>
-                    Email: {{ env('COMPANY_EMAIL') }}<br>
-                    Phone: {{ env('COMPANY_PHONE') }}</p>
+                    {{ $settings->company_address }}<br>
+                    {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}<br>
+                    Email: {{ $settings->company_email }}<br>
+                    Phone: {{ $settings->company_phone }}</p>
                 </div>
                 <p style="margin-top: 0.5pt; margin-bottom: 0;">
                 <p>Date: {{ \Carbon\Carbon::now()->format('M d, Y') }}</p>
@@ -260,7 +259,7 @@
         <!-- Apply the 'report-content' class to apply 'Times New Roman' font and size 10 -->
         <div class="report-content">
             <p class="text-left leading-relaxed mb-2">
-                On {{ \Carbon\Carbon::parse($record->selectedDate)->format('M d, Y') }}, {{ env('APP_NAME') }} [NJDCA {{ env('COMPANY_NJDCA') }}] 
+                On {{ \Carbon\Carbon::parse($record->selectedDate)->format('M d, Y') }}, {{ $settings->app_name }} [NJDCA {{ $settings->company_njdca }}]  
                 performed a dust wipe sampling for the presence of lead at {{ $record->address }}, @if(isset($record->designation)) 
                 Unit: {{ $record->designation }}, @endif {{ $record->municipality }}, NJ {{ $record->city }}; (the “property”) in 
                 compliance with NJAC 5:28A. Only the dwelling and common area interiors were included. Exteriors were not part of 

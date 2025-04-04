@@ -129,11 +129,10 @@
         <div class="logo-container">
             <img src="{{ public_path('images/logo.png') }}" alt="Company Logo" style="width: 600px; height: auto;">
             <div class="company-info"><p>
-                {{-- {{ env('APP_NAME') }}<br> --}}
-                    {{ env('COMPANY_ADDRESS') }}<br>
-                    {{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}<br>
-                Email: {{ env('COMPANY_EMAIL') }}<br>
-                Phone: {{ env('COMPANY_PHONE') }}</p>
+                {{ $settings->company_address }}<br>
+                {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}<br>
+                Email: {{ $settings->company_email }}<br>
+                Phone: {{ $settings->company_phone }}</p>
             </div>
             <p>Date: {{ \Carbon\Carbon::now()->format('M d, Y') }}</p>
         </div>
@@ -276,14 +275,14 @@
     <div class="footer">
         <p>Payment Details:</p>
         <p>Pay Status: Unpaid</p>
-        <p>Pledge Enviro LLC</p>
+        <p>{{ $settings->app_name }}</p>
         <p>
             <strong>Make Check Payment to:</strong><br>
             <hr>
             <h1 class="bold">
-            {{ env('APP_NAME') }}<br>
-                {{ env('COMPANY_ADDRESS') }}<br>
-                {{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}<br>
+            {{ $settings->app_name }}<br>
+            {{ $settings->company_address }}<br>
+            {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}<br>
             </h1><br><br><br><br>
         </p>
         <hr>

@@ -16,9 +16,9 @@
 <p>If you have any questions, feel free to email or call our customer success team. (We're lightning quick at replying.)</p>
 <p>Thank you for trusting us with this evaluation.</p>
 
-<p>Thanks,<br>{{ config('app.name') }}<br>
-    Email: {{ env('COMPANY_EMAIL') }}<br>
-    Phone: {{ env('COMPANY_PHONE') }}</p>
+<p>Thanks,<br>{{ $settings->app_name ?? config('app.name') }}<br>
+    Email: {{ $settings->company_email ?? 'Email Not Set' }}<br>
+    Phone: {{ $settings->company_phone ?? 'Phone Not Set' }}</p>
 
 </div>
 </x-mail::message>

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AppSetting;
 use App\Services\PdfGenerator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -70,19 +71,33 @@ class InvoiceMail extends Mailable
     // Example Mailable class
     public function build()
     {
+        $settings = AppSetting::first();
+
+        // Log a warning if settings are not found
+        if (!$settings) {
+            \Log::warning('AppSetting not found when generating InvoiceMail.');
+        }
+
         // Check if the PDF file exists before attaching
         if (!file_exists($this->pdfPath)) {
-            throw new \Exception("The attachment file does not exist at path: {$this->pdfPath}");
+            \Log::error("The attachment file does not exist at path: {$this->pdfPath}");
+            return $this->markdown('InvoiceMail')
+                        ->with([
+                            'data' => $this->data,
+                            'settings' => $settings,
+                        ]);
         }
-        
-        return $this->from(env('MAIL_FROM_ADDRESS')) // Sender's email address
-                    ->replyTo(env('ADMIN_EMAIL')) // Set the reply-to email from the .env file
-                    ->with(['data' => $this->data]) // Pass additional data to the email view
-                    ->attach($this->pdfPath, [ 
-                        'as' => basename($this->pdfPath), // Attach with the unique name
+
+        return $this->from($settings->company_email ?? env('MAIL_FROM_ADDRESS', 'default@example.com'))
+                    ->replyTo($settings->company_email ?? env('ADMIN_EMAIL', 'admin@example.com'))
+                    ->with([
+                        'data' => $this->data,
+                        'settings' => $settings,
+                    ])
+                    ->attach($this->pdfPath, [
+                        'as' => basename($this->pdfPath),
                         'mime' => 'application/pdf',
                     ])
-                    ->markdown('InvoiceMail'); // Reference to the Markdown email view
+                    ->markdown('InvoiceMail');
     }
-
 }

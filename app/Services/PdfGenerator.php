@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use PDF; // Import the PDF facade from the package
+use App\Models\AppSetting; // Import the AppSetting model
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -17,6 +18,9 @@ class PdfGenerator
 
     public function generatePdf(array $data)
     {
+        // Fetch the settings from the AppSetting model
+        $settings = AppSetting::first();
+
         // Check the selected payment method and return the appropriate view name
         if ($data['selectedPaymentMethod'] === 'MANUAL') {
             return PDF::loadView('pdf.invoice', compact('data'))->stream();
@@ -30,6 +34,9 @@ class PdfGenerator
 
     public function saveInvoice(array $data, $fileName)
     {
+        // Fetch the settings from the AppSetting model
+        $settings = AppSetting::first();
+
         $view = $this->getPdfView($data);
 
         // Ensure the filename doesn’t already have .pdf
@@ -42,7 +49,7 @@ class PdfGenerator
             File::makeDirectory($directory, 0755, true, true);
         }
 
-        $pdf = PDF::loadView($view, compact('data'));
+        $pdf = PDF::loadView($view, compact('data', 'settings'));
         $pdf->save($filePath);
 
         return $filePath;

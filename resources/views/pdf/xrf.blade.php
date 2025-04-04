@@ -256,11 +256,10 @@
             <div class="logo-container">
                 <img src="{{ public_path('images/logo.png') }}" alt="Company Logo" style="width: 200px; height: auto;">
                 <div class="company-info"><p>
-                    {{-- {{ env('APP_NAME') }}<br> --}}
-                    {{ env('COMPANY_ADDRESS') }}<br>
-                    {{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}<br>
-                    Email: {{ env('COMPANY_EMAIL') }}<br>
-                    Phone: {{ env('COMPANY_PHONE') }}</p>
+                    {{ $settings->company_address }}<br>
+                    {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}<br>
+                    Email: {{ $settings->company_email }}<br>
+                    Phone: {{ $settings->company_phone }}</p>
                 </div>
                 <p style="margin-top: 0.5pt; margin-bottom: 0;">
                 <p>Date: {{ \Carbon\Carbon::now()->format('M d, Y') }}</p>
@@ -288,11 +287,11 @@
         <div class="prepared-by">
             <p class="text-left text-2sm leading-relaxed">
                 <strong>Prepared By:</strong> <br>
-                {{ env('APP_NAME') }}<br>
-                {{ env('COMPANY_ADDRESS') }}<br>
-                {{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}<br>
-                Email: {{ env('COMPANY_EMAIL') }}<br>
-                Phone: {{ env('COMPANY_PHONE') }}<br>
+                {{ $settings->app_name }}<br>
+                {{ $settings->company_address }}<br>
+                {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}<br>
+                Email: {{ $settings->company_email }}<br>
+                Phone: {{ $settings->company_phone }}<br>
                 Inspection Date: {{ \Carbon\Carbon::now()->format('M d, Y') }}<br>
                 Order Number: {{ $record->order_id }}
             </p>
@@ -452,27 +451,27 @@
                         <tbody>
                             <tr class="border-b">
                                 <td class="border-r">Organization</td>
-                                <td>{{ env('APP_NAME') }}</td>
+                                <td>{{ $settings->app_name }}</td>
                             </tr>
                             <tr class="border-b">
                                 <td class="border-r">Certification #</td>
-                                <td>NJDCA {{ env('COMPANY_NJDCA') }}</td>
+                                <td>NJDCA {{ $settings->company_njdca }}</td>
                             </tr>
                             <tr class="border-b">
                                 <td class="border-r">Street</td>
-                                <td>{{ env('COMPANY_ADDRESS') }}</td>
+                                <td>{{ $settings->company_address }}</td>
                             </tr>
                             <tr class="border-b">
                                 <td class="border-r">City, State & Zip</td>
-                                <td>{{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}</td>
+                                <td>{{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}</td>
                             </tr>
                             <tr class="border-b">
                                 <td class="border-r">Phone Number</td>
-                                <td> {{ env('COMPANY_PHONE') }}</td>
+                                <td>{{ $settings->company_phone }}</td>
                             </tr>
                             <tr>
                                 <td class="border-r">Email Address</td>
-                                <td>{{ env('COMPANY_EMAIL') }}</td>
+                                <td>{{ $settings->company_email }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -484,11 +483,10 @@
             <div class="logo-container">
                 <img src="{{ public_path('images/logo.png') }}" alt="Company Logo" style="width: 200px; height: auto;">
                 <div class="company-info"><p>
-                    {{-- {{ env('APP_NAME') }}<br> --}}
-                    {{ env('COMPANY_ADDRESS') }}<br>
-                    {{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}<br>
-                    Email: {{ env('COMPANY_EMAIL') }}<br>
-                    Phone: {{ env('COMPANY_PHONE') }}</p>
+                    {{ $settings->company_address }}<br>
+                    {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}<br>
+                    Email: {{ $settings->company_email }}<br>
+                    Phone: {{ $settings->company_phone }}</p>
                 </div>
                 <p style="margin-top: 0.5pt; margin-bottom: 0;">
                 <p>Date: {{ \Carbon\Carbon::now()->format('M d, Y') }}</p>
@@ -502,7 +500,7 @@
             <span class="font-bold text-2sm mb-4">{{ \Carbon\Carbon::parse($record->selectedDate)->format('M d, Y') }}</span>
 
             <p class="text-left text-2sm leading-relaxed mb-4">
-                On {{ \Carbon\Carbon::parse($record->selectedDate)->format('M d, Y') }}, {{ env('APP_NAME') }} [NJDCA {{ env('COMPANY_NJDCA') }}] 
+                On {{ \Carbon\Carbon::parse($record->selectedDate)->format('M d, Y') }}, {{ $settings->app_name }} [NJDCA {{ $settings->company_njdca }}] 
                 condition assessment at {{ $record->address }}, @if(isset($record->designation)) Unit: {{ $record->designation }}, @endif 
                 {{ $record->municipality }}, NJ {{ $record->city }}; (the “property”) in compliance with NJAC 5:28A. The lead-based paint inspection sampling protocol that was applied follows “Inspections in Single-Family Housing” Chapter 7 of the HUD Guidelines (2012 revision) and the protocol as referenced in USEPA 40 CFR Part 745.227(b). See Appendix B Lead Paint Inspection Report for the complete set of X-Ray Fluorescence data.
             </p>
@@ -597,7 +595,7 @@
             <p class="text-left text-2sm leading-relaxed mb-4">
                 There are different options available for controlling lead-based paint. Each option has its own
                 associated costs and benefits both short and long term. In most cases, a combination of the options
-                can be implemented to reduce the possibility of lead contamination. {{ env('APP_NAME') }}. 
+                can be implemented to reduce the possibility of lead contamination. {{ $settings->app_name }}. 
                 strongly suggests that each option is thoroughly contemplated before beginning any activity.
                 <br /><br />
                 Components that are found to be positive for lead-based paint should be checked for deterioration.
@@ -669,12 +667,12 @@
                 X-Ray Fluorescence (XRF) paint testing is performed to detect the presence of lead on painted
                 surfaces. The XRF instrument is state-of-the art equipment. XRF testing is usually the preferred
                 method of testing, because it is non-destructive, quantitative and can be performed on the spot with
-                acceptable accuracy. {{ env('APP_NAME') }}’s evaluators follow the manufacturer’s
+                acceptable accuracy. {{ $settings->app_name }}’s evaluators follow the manufacturer’s
                 suggested use and the Performance Characteristic Sheet of the XRF instrument being used. The
                 results of the XRF testing are the basis for drawing conclusions and making recommendations in the
                 report.
                 <br /><br />
-                All {{ env('APP_NAME') }}’s evaluators follow 40 CFR 745 and the HUD Guidelines for
+                All {{ $settings->app_name }}’s evaluators follow 40 CFR 745 and the HUD Guidelines for
                 testing lead using an XRF instrument. All federal, state and city regulations are followed when
                 applicable. The evaluator will test one of each and every different type of testing combination
                 (component) in each room being surveyed. Each XRF reading is assigned an exclusive sample
@@ -689,36 +687,36 @@
                 adult inhale or ingest sufficient quantities of low concentrations of leaded paint, dust, or soil, it will
                 accumulate in the body’s systems and could eventually cumulate to an elevated blood level of
                 concern.
-                </p>
+            </p>
 
                 <p class="text-sm font-bold mb-4">Any untested building components should be considered lead-based paint until tested.</p>
                 <p class="text-sm font-bold mb-4">Calibration Check Readings</p>
 
                 <p class="text-left text-2sm leading-relaxed mb-4">
-                    In addition to the manufacturer’s recommended warm up and quality control procedures, {{ env('APP_NAME') }}. 
-                    collects quality control readings as recommended in the HUD
-                    Guidelines. Quality control for XRF instrumentation instruments involves readings to check
-                    calibration.
+                In addition to the manufacturer’s recommended warm up and quality control procedures, {{ $settings->app_name }}. 
+                collects quality control readings as recommended in the HUD
+                Guidelines. Quality control for XRF instrumentation instruments involves readings to check
+                calibration.
                 <br /><br />
-                    For each XRF instrument, one set of XRF calibration check readings are recommended at least every
-                    four hours. The first is a set of three nominal-time or source decay corrected time XRF calibration
-                    check readings to be taken before the inspection begins for the day. The second occurs either after
-                    the day’s inspection work has been completed, or at least every four hours, whichever occurs first.
-                    {{ env('APP_NAME') }}’s XRF calibration check readings are taken on the Standard
-                    Reference Material (SRM) paint film nearest to 1.0 mg/cm<sup>2</sup>
-                    within the National Institute of
-                    Standards and Technology (NIST) SRM Used or the XRF manufacturer’s factory supplied SRM film.
-                    Three readings are collected on the SRM. The average of the three readings on the SRM must be
-                    within the acceptable plus and minus tolerances for proper calibration as detailed in the
-                    Performance Characteristic Sheet (PCS). All calibration checks are taken with the SRM film
-                    positioned at least several inches away from any potential source of lead.
+                For each XRF instrument, one set of XRF calibration check readings are recommended at least every
+                four hours. The first is a set of three nominal-time or source decay corrected time XRF calibration
+                check readings to be taken before the inspection begins for the day. The second occurs either after
+                the day’s inspection work has been completed, or at least every four hours, whichever occurs first.
+                {{ $settings->app_name }}’s XRF calibration check readings are taken on the Standard
+                Reference Material (SRM) paint film nearest to 1.0 mg/cm<sup>2</sup>
+                within the National Institute of
+                Standards and Technology (NIST) SRM Used or the XRF manufacturer’s factory supplied SRM film.
+                Three readings are collected on the SRM. The average of the three readings on the SRM must be
+                within the acceptable plus and minus tolerances for proper calibration as detailed in the
+                Performance Characteristic Sheet (PCS). All calibration checks are taken with the SRM film
+                positioned at least several inches away from any potential source of lead.
                 <br/><br/>
-                    Three readings are taken each time calibration check readings are made. The average of the
-                    readings are compared to the known value and if the average value is within the acceptable
-                    calibration check tolerance specified in the XRF Performance Characteristic Sheet the instrument is
-                    considered in control. If the average readings are not within the calibration check tolerance the
-                    instrument is not used until the instrument is brought back into control.
-                </p>
+                Three readings are taken each time calibration check readings are made. The average of the
+                readings are compared to the known value and if the average value is within the acceptable
+                calibration check tolerance specified in the XRF Performance Characteristic Sheet the instrument is
+                considered in control. If the average readings are not within the calibration check tolerance the
+                instrument is not used until the instrument is brought back into control.
+            </p>
             <!-- Add remaining sections as needed -->
         </div>
 

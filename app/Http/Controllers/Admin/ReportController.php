@@ -26,6 +26,7 @@ use App\Models\UnitContact;
 use App\Models\Inspector;
 use App\Models\Record;
 use App\Models\RecordPhoto;
+use App\Models\AppSetting;
 use Carbon\Carbon;
 
 class ReportController extends Controller
@@ -432,93 +433,95 @@ protected function updateRecordFiles(Record $record, $imagePaths)
     }
 
     protected function sendEmailWithPdf(Record $record, $mergedPdfPath, $signatureUrl)
-{
-    $email = $record->property_owner_email;
-    $xrfData = $record->xrf_data ?? 'default-xrf-data';
-    $mailClasses = [];
-
-    // Normalize includeXrf to boolean
-    $includeXrf = filter_var($record->includeXrf, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false;
-
-    // Debug log
-    \Log::debug("Evaluating email conditions for Record ID: {$record->id}", [
-        'methodology' => $record->methodology,
-        'includeXrf' => $includeXrf,
-        'xrf_pass_fail' => $record->xrf_pass_fail,
-        'pass_fail' => $record->pass_fail,
-    ]);
-
-    // Condition 1: Visual Inspection, No XRF
-    if ($record->methodology === 'Visual Inspection' && !$includeXrf) {
-        \Log::debug("Condition 1 matched: Visual Inspection, No XRF");
-        $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
-    }
-
-    // Condition 2: Dust Wipe Sampling, No XRF
-    if ($record->methodology === 'Dust Wipe Sampling' && !$includeXrf) {
-        \Log::debug("Condition 2 matched: Dust Wipe Sampling, No XRF");
-        $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
-    }
-
-    // Condition 3: XRF Pass
-    if (($record->methodology === 'Visual Inspection' || $record->methodology === 'Dust Wipe Sampling') && 
-        $includeXrf && 
-        $record->xrf_pass_fail === 'pass') {
-        \Log::debug("Condition 3 matched: XRF Pass");
-        $mailClasses[] = new XRFMail($record, $mergedPdfPath);
-    }
-
-    // Condition 4: XRF Fail
-    if ($includeXrf && $record->xrf_pass_fail === 'fail') {
-        if ($record->methodology === 'Visual Inspection') {
-            \Log::debug("Condition 4 matched: Visual Inspection, XRF Fail");
-            $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
-        } elseif ($record->methodology === 'Dust Wipe Sampling') {
-            \Log::debug("Condition 4 matched: Dust Wipe Sampling, XRF Fail");
-            $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
-        }
-    }
-
-    // Fallback for unhandled cases
-    if (empty($mailClasses)) {
-        \Log::warning("No specific condition matched, falling back to methodology-based email");
-        if ($record->methodology === 'Visual Inspection') {
-            $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
-        } elseif ($record->methodology === 'Dust Wipe Sampling') {
-            $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
-        } else {
-            $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
-        }
-    }
-
-    foreach ($mailClasses as $mailClass) {
-        Mail::to($email)
-            ->cc(env('COMPANY_EMAIL')) // Send a copy to the company email
-            ->send($mailClass);
-    
-        \Log::info("Email Sent Successfully to: " . $email . " - " . get_class($mailClass) . " (CC: " . env('COMPANY_EMAIL') . ")");
-    }
-    
-}
-
-private function resetRecord($record)
     {
-        try {
-            foreach ($record->photos as $photo) {
-                Storage::disk('public')->delete($photo->photo_path);
-                $photo->delete();
-            }
+        $email = $record->property_owner_email;
+        $xrfData = $record->xrf_data ?? 'default-xrf-data';
+        $mailClasses = [];
+        $settings = AppSetting::all(); // Fetch all settings
+        $companyEmail = $settings->where('key', 'company_email')->first()->value ?? 'info@pledgeenvironmental.com';
 
-            foreach (['floor_plan', 'lab_report', 'chain_custody', 'xrf_report', 'xrf_csv'] as $fileField) {
-                Storage::disk('public')->delete($record->$fileField);
-            }
+        // Normalize includeXrf to boolean
+        $includeXrf = filter_var($record->includeXrf, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false;
 
-            $record->delete();
-            return redirect()->back()->with('message', 'Record and files reset successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error resetting record: ' . $e->getMessage());
+        // Debug log
+        \Log::debug("Evaluating email conditions for Record ID: {$record->id}", [
+            'methodology' => $record->methodology,
+            'includeXrf' => $includeXrf,
+            'xrf_pass_fail' => $record->xrf_pass_fail,
+            'pass_fail' => $record->pass_fail,
+        ]);
+
+        // Condition 1: Visual Inspection, No XRF
+        if ($record->methodology === 'Visual Inspection' && !$includeXrf) {
+            \Log::debug("Condition 1 matched: Visual Inspection, No XRF");
+            $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
         }
+
+        // Condition 2: Dust Wipe Sampling, No XRF
+        if ($record->methodology === 'Dust Wipe Sampling' && !$includeXrf) {
+            \Log::debug("Condition 2 matched: Dust Wipe Sampling, No XRF");
+            $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+        }
+
+        // Condition 3: XRF Pass
+        if (($record->methodology === 'Visual Inspection' || $record->methodology === 'Dust Wipe Sampling') && 
+            $includeXrf && 
+            $record->xrf_pass_fail === 'pass') {
+            \Log::debug("Condition 3 matched: XRF Pass");
+            $mailClasses[] = new XRFMail($record, $mergedPdfPath);
+        }
+
+        // Condition 4: XRF Fail
+        if ($includeXrf && $record->xrf_pass_fail === 'fail') {
+            if ($record->methodology === 'Visual Inspection') {
+                \Log::debug("Condition 4 matched: Visual Inspection, XRF Fail");
+                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+            } elseif ($record->methodology === 'Dust Wipe Sampling') {
+                \Log::debug("Condition 4 matched: Dust Wipe Sampling, XRF Fail");
+                $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+            }
+        }
+
+        // Fallback for unhandled cases
+        if (empty($mailClasses)) {
+            \Log::warning("No specific condition matched, falling back to methodology-based email");
+            if ($record->methodology === 'Visual Inspection') {
+                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+            } elseif ($record->methodology === 'Dust Wipe Sampling') {
+                $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+            } else {
+                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+            }
+        }
+
+        foreach ($mailClasses as $mailClass) {
+            Mail::to($email)
+                ->cc($companyEmail) // Use $companyEmail from settings instead of env()
+                ->send($mailClass);
+        
+            \Log::info("Email Sent Successfully to: " . $email . " - " . get_class($mailClass) . " (CC: " . env('COMPANY_EMAIL') . ")");
+        }
+        
     }
+
+    private function resetRecord($record)
+        {
+            try {
+                foreach ($record->photos as $photo) {
+                    Storage::disk('public')->delete($photo->photo_path);
+                    $photo->delete();
+                }
+
+                foreach (['floor_plan', 'lab_report', 'chain_custody', 'xrf_report', 'xrf_csv'] as $fileField) {
+                    Storage::disk('public')->delete($record->$fileField);
+                }
+
+                $record->delete();
+                return redirect()->back()->with('message', 'Record and files reset successfully.');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Error resetting record: ' . $e->getMessage());
+            }
+        }
 
 
 //------------------------------------

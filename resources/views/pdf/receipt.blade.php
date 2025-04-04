@@ -129,11 +129,10 @@
         <div class="logo-container">
             <img src="{{ public_path('images/logo.png') }}" alt="Company Logo" style="width: 600px; height: auto;">
             <div class="company-info"><p>
-                {{-- {{ env('APP_NAME') }}<br> --}}
-                    {{ env('COMPANY_ADDRESS') }}<br>
-                    {{ env('COMPANY_CITY') }}, {{ env('COMPANY_STATE') }} {{ env('COMPANY_ZIP') }}<br>
-                Email: {{ env('COMPANY_EMAIL') }}<br>
-                Phone: {{ env('COMPANY_PHONE') }}</p>
+                {{ $settings->company_address }}<br>
+                {{ $settings->company_city }}, {{ $settings->company_state }} {{ $settings->company_zip }}<br>
+                Email: {{ $settings->company_email }}<br>
+                Phone: {{ $settings->company_phone }}</p>
             </div>
             <p>Date: {{ \Carbon\Carbon::now()->format('M d, Y') }}</p>
         </div>
@@ -245,7 +244,7 @@
 
             <!-- Credit Card Surcharge -->
             <tr class="total-row">
-                <td class="bold">Tax:</td>
+                <td class="bold">Surcharge:</td>
                 <td></td>
                 <td>${{ $data['credSucharg'] }}</td>
             </tr>
@@ -258,8 +257,6 @@
             </tr>
         </tbody>
     </table>
-    <br><br>
-
     <hr>
 
     <!-- Footer -->
