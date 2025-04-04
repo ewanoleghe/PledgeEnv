@@ -318,7 +318,7 @@
     {"dcaMunicode": "1223", "censusFips": "3402369420", "municipality": "South River Borough", "county": "Middlesex", "methodology": "Visual Inspection"},
     {"dcaMunicode": "1224", "censusFips": "3402369810", "municipality": "Spotswood Borough", "county": "Middlesex", "methodology": "Visual Inspection"},
     {"dcaMunicode": "1225", "censusFips": "3402382000", "municipality": "Woodbridge Township", "county": "Middlesex", "methodology": "Visual Inspection"},
-    {"dcaMunicode": "1214", "censusFips": "3402351210", "municipality": "New Brunswick City", "county": "Middlesex", "methodology": "Dust Wipe Sampling"},
+    {"dcaMunicode": "1214", "censusFips": "3402351210", "municipality": "New Brunswick City", "county": "Middlesex", "methodology": "Visual Inspection"},
     {"dcaMunicode": "1330", "censusFips": "3402500070", "municipality": "Aberdeen Township", "county": "Monmouth", "methodology": "Visual Inspection"},
     {"dcaMunicode": "1301", "censusFips": "3402500730", "municipality": "Allenhurst Borough", "county": "Monmouth", "methodology": "Visual Inspection"},
     {"dcaMunicode": "1302", "censusFips": "3402500760", "municipality": "Allentown Borough", "county": "Monmouth", "methodology": "Visual Inspection"},
