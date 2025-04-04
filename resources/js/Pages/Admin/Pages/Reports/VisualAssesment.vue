@@ -1,8 +1,22 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Container from "../../../../Components/Container.vue";
+import PrimaryBtn from "../../../../Components/PrimaryBtn.vue"; // Your button component
 import Title from "../../../../Components/Title.vue";
-import { ref, computed } from 'vue';
+import { useForm, router } from '@inertiajs/vue3'
+
+const companyLogo = '/images/logo.png';  
+const companyAddress = import.meta.env.VITE_COMPANY_ADDRESS || 'Default Address';
+const companyCity = import.meta.env.VITE_COMPANY_CITY || 'Default City';
+const companyState = import.meta.env.VITE_COMPANY_STATE || 'Default State';
+const companyZip = import.meta.env.VITE_COMPANY_ZIP || 'Default Zip';
+const companyEmail = import.meta.env.VITE_COMPANY_EMAIL || 'Default Email';
+const companyPhone = import.meta.env.VITE_COMPANY_PHONE || 'Default Phone';
+const companyName = import.meta.env.VITE_APP_NAME || 'Default Name';
+const njdca = import.meta.env.VITE_COMPANY_NJDCA || 'Default NJDCA';
+
+// Emit event to the parent
+const emit = defineEmits();
 
 // Set the layout for this component
 defineOptions({ layout: AdminLayout });
@@ -10,24 +24,7 @@ defineOptions({ layout: AdminLayout });
 const props = defineProps({
     record: Object,
     signatureUrl: String,
-    settings: Object, // Add settings prop
 });
-
-const companyLogo = '/images/logo.png';  
-const stateLogo = '/images/stateLogo.png';  
-// Use settings from props with fallbacks
-const companyAddress = props.settings?.company_address || '648 Newark Ave.';
-const companyCity = props.settings?.company_city || 'Elizabeth';
-const companyState = props.settings?.company_state || 'NJ';
-const companyZip = props.settings?.company_zip || '07208';
-const companyEmail = props.settings?.company_email || 'info@pledgeenvironmental.com';
-const companyPhone = props.settings?.company_phone || '(609) 208-5535';
-const companyName = props.settings?.app_name || 'Pledge Environmental LLC';
-const njdca = props.settings?.company_njdca || '00862-E';
-const cOwner = props.settings?.company_owner || 'Saheed Alex Adeyeri';
-
-// Emit event to the parent
-const emit = defineEmits();
 
 // Method to format date from YYYY-MM-DD to MM/DD/YYYY
 const formatDate = (dateString) => {
@@ -113,10 +110,9 @@ const handleApprove = () => {
                 type="button" 
                 :disabled="loading" 
                 @click="handleApprove" 
-                class="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300 flex flex-col items-center justify-center text-center">
+                class="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300">
                 Approve & Send Report <br>[A report will be emailed to the Customer]
             </PrimaryBtn>
-
         </div>
         
         <hr class="border-t-2 border-black w-full mb-20"> <!-- Added w-full here -->
