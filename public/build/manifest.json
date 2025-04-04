@@ -1,17 +1,17 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-CvntMOQz.css",
+    "file": "assets/app-B1qEb1a1.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/Components/municipalities.json": {
-    "file": "assets/municipalities-BRj0ynXD.js",
+    "file": "assets/municipalities-Do0hZ-5q.js",
     "name": "municipalities",
     "src": "resources/js/Components/municipalities.json",
     "isDynamicEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-d22--xL1.js",
+    "file": "assets/app-CXUIO-3S.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -20,7 +20,7 @@
     ],
     "css": [
       "assets/app-BH9vjAHm.css",
-      "assets/app-CvntMOQz.css"
+      "assets/app-B1qEb1a1.css"
     ]
   }
 }

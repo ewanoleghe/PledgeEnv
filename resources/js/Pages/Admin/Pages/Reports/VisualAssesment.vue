@@ -113,9 +113,10 @@ const handleApprove = () => {
                 type="button" 
                 :disabled="loading" 
                 @click="handleApprove" 
-                class="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300">
+                class="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-300 flex flex-col items-center justify-center text-center">
                 Approve & Send Report <br>[A report will be emailed to the Customer]
             </PrimaryBtn>
+
         </div>
         
         <hr class="border-t-2 border-black w-full mb-20"> <!-- Added w-full here -->
