@@ -4,9 +4,6 @@ import Container from "../../../../Components/Container.vue";
 import Title from "../../../../Components/Title.vue";
 import { ref, computed } from 'vue';
 
-// Emit event to the parent
-const emit = defineEmits();
-
 // Set the layout for this component
 defineOptions({ layout: AdminLayout });
 
@@ -28,6 +25,9 @@ const companyPhone = props.settings?.company_phone || '(609) 208-5535';
 const companyName = props.settings?.app_name || 'Pledge Environmental LLC';
 const njdca = props.settings?.company_njdca || '00862-E';
 const cOwner = props.settings?.company_owner || 'Saheed Alex Adeyeri';
+
+// Emit event to the parent
+const emit = defineEmits();
 
 // Method to format date from YYYY-MM-DD to MM/DD/YYYY
 const formatDate = (dateString) => {

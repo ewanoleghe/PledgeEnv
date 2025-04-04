@@ -188,6 +188,14 @@ const updatePaymentStatusBookingView = async (id) => {
                                             <td class="border px-4 py-2 font-bold">{{ bookings.county }} County</td>
                                         </tr>
                                         <tr>
+                                            <td class="border px-4 py-2 text-right font-bold">Block #</td>
+                                            <td class="border px-4 py-2 font-bold">{{ bookings.block }} </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border px-4 py-2 text-right font-bold">Lot #</td>
+                                            <td class="border px-4 py-2 font-bold">{{ bookings.lot }} </td>
+                                        </tr>
+                                        <tr>
                                             <td class="border px-4 py-2 text-right font-bold">Customer Details</td>
                                             <td class="border px-4 py-2 font-bold">{{ bookings.name }}
                                                 <br>
@@ -229,7 +237,7 @@ const updatePaymentStatusBookingView = async (id) => {
                                             <td class="border px-4 py-2 font-bold">{{ bookings.discountCode }}</td>
                                         </tr>
                                         <tr>
-                                            <td class="border px-4 py-2 text-right font-bold">Asign To</td>
+                                            <td class="border px-4 py-2 text-right font-bold">Assign To</td>
                                             <td class="border px-4 py-2 font-bold">{{ bookings.assignTo }}</td>
                                         </tr>
                                         <tr>

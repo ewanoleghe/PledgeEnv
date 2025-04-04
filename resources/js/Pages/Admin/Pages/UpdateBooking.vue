@@ -22,6 +22,8 @@ const form = ref({
         address: props.bookings?.address || '',
         name: props.bookings?.name || '', // Change this
         email: props.bookings?.email || '',
+        block: props.bookings?.block || '',
+        lot: props.bookings?.lot || '',
         phone: props.bookings?.phone || '',
         assignTo: props.bookings?.assignTo || '',
         optionalMessage: props.bookings?.optionalMessage || '',
@@ -119,8 +121,25 @@ const updateBooking = async () => {
                                 <td class="border px-4 py-2">{{ bookings.municipality }}, {{ bookings.city }}</td>
                             </tr>
                             <tr>
-                                <td class="border px-4 py-2 text-right font-bold">County</td>
+                                <td class="border px-4 py-2 text-right font-bold">County #</td>
                                 <td class="border px-4 py-2">{{ bookings.county }} County</td>
+                            </tr>
+
+                            <tr>
+                                <td class="border px-4 py-2 text-right font-bold">Block #</td>
+                                <td class="border px-4 py-2">
+                                    <input type="text" v-model="form.bookings.block" placeholder="Enter your street block"
+                                        class="mt-1 p-2 w-full border rounded-md" required />
+                                    <div v-if="form.errors.block" class="text-red-500 text-sm mt-1">{{ form.errors.address }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border px-4 py-2 text-right font-bold">Lot #</td>
+                                <td class="border px-4 py-2">
+                                    <input type="text" v-model="form.bookings.lot" placeholder="Enter your street lot"
+                                        class="mt-1 p-2 w-full border rounded-md" required />
+                                    <div v-if="form.errors.lot" class="text-red-500 text-sm mt-1">{{ form.errors.lot }}</div>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="border px-4 py-2 text-right font-bold">Service Type</td>

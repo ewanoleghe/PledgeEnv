@@ -153,6 +153,8 @@ class BookingController extends Controller
             'selectedTime' => 'required|string',
             'name' => 'required|string|max:255',
             'email' => 'required|email',
+            'block' => 'required|string',
+            'lot' => 'required|string',
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
             'optionalMessage' => 'nullable|string|max:500',

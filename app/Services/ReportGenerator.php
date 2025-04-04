@@ -18,12 +18,12 @@ class ReportGenerator
         $certificateFiles = [];
         
         if ($record->includeXrf) {
-            $pdfFiles[] = $this->generatePdf('pdf.xrf', $record, "xrf_report_{$record->id}.pdf");
-            $this->addIfValid($certificateFiles, storage_path("app/public/{$record->xrf_report}")); // Landscape
+            $pdfFiles[] = $this->generatePdf('pdf.xrf', $record, "xrf_report_{$record->id}.pdf", 'portrait', null, $settings);
+            $this->addIfValid($certificateFiles, storage_path("app/public/{$record->xrf_report}"));
             $this->addIfValid($pdfFiles, storage_path("app/public/{$record->floor_plan}"));
             
             if ($record->xrf_pass_fail === 'pass') {
-                $certificateFiles[] = $this->generatePdf('pdf.certificatefree', $record, "certificatefree_{$record->id}.pdf", 'landscape');
+                $certificateFiles[] = $this->generatePdf('pdf.certificatefree', $record, "certificatefree_{$record->id}.pdf", 'landscape', null, $settings);
             }
         }
         
@@ -59,6 +59,8 @@ class ReportGenerator
 
     public function saveReport(array $data, $fileName)
     {
+        $settings = AppSetting::first();
+
         if (!isset($data['record']) || empty($data['record'])) {
             \Log::error("PDF Generation Failed: Record data is missing.");
             return false;
@@ -98,20 +100,20 @@ class ReportGenerator
 
             // Condition 1: Visual Inspection, No XRF
             if ($record->methodology === 'Visual Inspection' && !$record->includeXrf) {
-                $pdfFiles[] = $this->generatePdf('pdf.visual', $record, "visual_report_{$record->id}.pdf", 'portrait', $signatureUrl);
+                $pdfFiles[] = $this->generatePdf('pdf.visual', $record, "visual_report_{$record->id}.pdf", 'portrait', $signatureUrl, $settings);
                 $this->addIfValid($pdfFiles, storage_path("app/public/{$record->floor_plan}"));
                 if ($record->pass_fail === 'pass') {
-                    $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl);
+                    $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl, $settings);
                 }
             }
 
             // Condition 2: Dust Wipe Sampling, No XRF
             if ($record->methodology === 'Dust Wipe Sampling' && !$record->includeXrf) {
-                $pdfFiles[] = $this->generatePdf('pdf.dust', $record, "dust_report_{$record->id}.pdf", 'portrait', $signatureUrl);
+                $pdfFiles[] = $this->generatePdf('pdf.dust', $record, "dust_report_{$record->id}.pdf", 'portrait', $signatureUrl, $settings);
                 $this->addIfValid($pdfFiles, storage_path("app/public/{$record->floor_plan}"));
                 $this->addIfValid($pdfFiles, storage_path("app/public/{$record->lab_report}"));
                 if ($record->pass_fail === 'pass') {
-                    $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl);
+                    $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl, $settings);
                 }
             }
 
@@ -119,7 +121,7 @@ class ReportGenerator
             if (($record->methodology === 'Visual Inspection' || $record->methodology === 'Dust Wipe Sampling') && 
                 $record->includeXrf && 
                 $record->xrf_pass_fail === 'pass') {
-                $xrfPdfPath = $this->generatePdf('pdf.xrf', $record, "xrf_report_{$record->id}.pdf", 'portrait', $signatureUrl);
+                $xrfPdfPath = $this->generatePdf('pdf.xrf', $record, "xrf_report_{$record->id}.pdf", 'portrait', $signatureUrl, $settings);
                 $pdfFiles[] = $xrfPdfPath;
                 $this->addIfValid($pdfFiles, storage_path("app/public/{$record->floor_plan}"));
 
@@ -130,7 +132,7 @@ class ReportGenerator
                     \Log::warning("Failed to add existing xrf_report for Condition 3, Record ID: {$record->id}", ['path' => $xrfReportPath]);
                 }
 
-                $certificateFreePath = $this->generatePdf('pdf.certificatefree', $record, "certificatefree_{$record->id}.pdf", 'landscape', $signatureUrl);
+                $certificateFreePath = $this->generatePdf('pdf.certificatefree', $record, "certificatefree_{$record->id}.pdf", 'landscape', $signatureUrl, $settings);
                 if (file_exists($certificateFreePath)) {
                     $certificateFiles[] = $certificateFreePath;
                     \Log::debug("Added certificatefree to certificateFiles for Condition 3, Record ID: {$record->id}", ['path' => $certificateFreePath]);
@@ -143,7 +145,7 @@ class ReportGenerator
             if (($record->methodology === 'Visual Inspection' || $record->methodology === 'Dust Wipe Sampling') && 
                 $record->includeXrf && 
                 $record->xrf_pass_fail === 'fail') {
-                $xrfPdfPath = $this->generatePdf('pdf.xrf', $record, "xrf_report_{$record->id}.pdf", 'portrait', $signatureUrl);
+                $xrfPdfPath = $this->generatePdf('pdf.xrf', $record, "xrf_report_{$record->id}.pdf", 'portrait', $signatureUrl, $settings);
                 $pdfFiles[] = $xrfPdfPath;
                 $this->addIfValid($pdfFiles, storage_path("app/public/{$record->floor_plan}"));
 
@@ -155,15 +157,15 @@ class ReportGenerator
                 }
 
                 if ($record->methodology === 'Visual Inspection') {
-                    $pdfFiles[] = $this->generatePdf('pdf.visual', $record, "visual_report_{$record->id}.pdf", 'portrait', $signatureUrl);
+                    $pdfFiles[] = $this->generatePdf('pdf.visual', $record, "visual_report_{$record->id}.pdf", 'portrait', $signatureUrl, $settings);
                     if ($record->pass_fail === 'pass') {
-                        $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl);
+                        $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl, $settings);
                     }
                 } elseif ($record->methodology === 'Dust Wipe Sampling') {
-                    $pdfFiles[] = $this->generatePdf('pdf.dust', $record, "dust_report_{$record->id}.pdf", 'portrait', $signatureUrl);
+                    $pdfFiles[] = $this->generatePdf('pdf.dust', $record, "dust_report_{$record->id}.pdf", 'portrait', $signatureUrl, $settings);
                     $this->addIfValid($pdfFiles, storage_path("app/public/{$record->lab_report}"));
                     if ($record->pass_fail === 'pass') {
-                        $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl);
+                        $certificateFiles[] = $this->generatePdf('pdf.certificate', $record, "certificate_{$record->id}.pdf", 'landscape', $signatureUrl, $settings);
                     }
                 }
             }
@@ -189,11 +191,14 @@ class ReportGenerator
         }
     }
 
-    private function generatePdf($view, $record, $fileName, $orientation = 'portrait', $signatureUrl = null)
+    private function generatePdf($view, $record, $fileName, $orientation = 'portrait', $signatureUrl = null, $settings = null)
     {
         $data = compact('record');
         if ($signatureUrl) {
             $data['signatureUrl'] = $signatureUrl;
+        }
+        if ($settings) {
+            $data['settings'] = $settings;
         }
         $pdf = PDF::loadView($view, $data)->setPaper('a4', $orientation);
         $pdfPath = storage_path("app/private/temp/{$fileName}");
