@@ -262,8 +262,8 @@ class ReportController extends Controller
         }
     }
 
-    //  View Report Resources
-    public function viewResources(Request $request, $id = null)
+//  View Report Resources
+public function viewResources(Request $request, $id = null)
 {
     // Ensure the user is authenticated before serving the file
     if (!Auth::check()) {
