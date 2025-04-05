@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\AppSetting;
 
 class VisualMail extends Mailable
 {
@@ -16,18 +17,24 @@ class VisualMail extends Mailable
 
     public $record;
     public $signatureUrl;
+    public $settings;
+    public $companyEmail;
+    public $companyPhone;
     public $xrfData;
     public $pdfPath;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($record, $pdfPath, $signatureUrl, $xrfData)
+    public function __construct($record, $pdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone)
     {
         $this->record = $record;
         $this->pdfPath = $pdfPath;
         $this->signatureUrl = $signatureUrl;
         $this->xrfData = $xrfData;
+        $this->settings = $settings;
+        $this->companyEmail = $companyEmail;
+        $this->companyPhone = $companyPhone;
     }
 
     /**
@@ -46,7 +53,7 @@ class VisualMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'VisualMail',
+            markdown: 'DustMail',
         );
     }
 
@@ -74,18 +81,30 @@ class VisualMail extends Mailable
             'city' => $this->record->city ?? 'Unknown City',
         ];
 
+        $companyEmail = AppSetting::value('company_email') ?? env('MAIL_FROM_ADDRESS');
+        
         if (!file_exists($pdfFullPath)) {
             \Log::error("PDF Attachment Missing: {$pdfFullPath}");
             return $this->markdown('VisualMail')
                         ->subject('Visual Report: Lead Based Paint Inspection')
-                        ->with('data', $data);
+                        ->with([
+                            'data' => $data,
+                            'settings' => $this->settings,
+                            'companyEmail' => $this->companyEmail,
+                            'companyPhone' => $this->companyPhone, 
+                        ]);
         }
 
-        return $this->from(env('MAIL_FROM_ADDRESS'))
-                    ->replyTo(env('ADMIN_EMAIL'))
+        return $this->from($this->companyEmail)
+                    ->replyTo($this->companyEmail)
                     ->subject('Lead Based Paint Inspection Report')
                     ->markdown('VisualMail')
-                    ->with('data', $data)
+                    ->with([
+                        'data' => $data,
+                        'settings' => $this->settings,
+                        'companyEmail' => $this->companyEmail,
+                        'companyPhone' => $this->companyPhone,
+                    ])
                     ->attach($pdfFullPath, [
                         'as' => "Visual_Report_{$this->record->id}.pdf",
                         'mime' => 'application/pdf',

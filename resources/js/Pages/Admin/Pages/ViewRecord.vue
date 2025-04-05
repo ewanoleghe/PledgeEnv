@@ -15,6 +15,7 @@ const props = defineProps({
     record: Object,
     signatureUrl: String,
     xrfData: Array,
+    appSettings: String,
     pageName: String,
     message: String,
     error: String,
@@ -39,23 +40,28 @@ const props = defineProps({
         <VisualAssesment v-if="record.methodology === 'Visual Inspection' && !record.includeXrf"
             :record="record" 
             :signatureUrl="signatureUrl"
+            :appSettings="appSettings"
         />
          <DustAssesment v-if="record.methodology === 'Dust Wipe Sampling' && !record.includeXrf"
             :record="record" 
             :signatureUrl="signatureUrl"
+            :appSettings="appSettings"
         />
         <Certificate v-if="record.pass_fail === 'pass' && !record.includeXrf"
             :record="record" 
             :signatureUrl="signatureUrl"
+            :appSettings="appSettings"
         />
         <ReportXrf v-if="record.includeXrf"
             :record="record" 
             :signatureUrl="signatureUrl"
+            :appSettings="appSettings"
             :xrfData="xrfData"
         />
         <CertificateFree v-if="record.xrf_pass_fail === 'pass' && record.includeXrf"
             :record="record" 
             :signatureUrl="signatureUrl"
+            :appSettings="appSettings"
         />
 
     </Container>

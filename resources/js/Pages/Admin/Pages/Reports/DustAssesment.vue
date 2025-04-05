@@ -5,26 +5,28 @@ import PrimaryBtn from "../../../../Components/PrimaryBtn.vue"; // Your button c
 import Title from "../../../../Components/Title.vue";
 import { useForm, router } from '@inertiajs/vue3'
 
-const companyLogo = '/images/logo.png';  
-const companyAddress = import.meta.env.VITE_COMPANY_ADDRESS || 'Default Address';
-const companyCity = import.meta.env.VITE_COMPANY_CITY || 'Default City';
-const companyState = import.meta.env.VITE_COMPANY_STATE || 'Default State';
-const companyZip = import.meta.env.VITE_COMPANY_ZIP || 'Default Zip';
-const companyEmail = import.meta.env.VITE_COMPANY_EMAIL || 'Default Email';
-const companyPhone = import.meta.env.VITE_COMPANY_PHONE || 'Default Phone';
-const companyName = import.meta.env.VITE_APP_NAME || 'Default Name';
-const njdca = import.meta.env.VITE_COMPANY_NJDCA || 'Default NJDCA';
-
-// Emit event to the parent
-const emit = defineEmits();
-
 // Set the layout for this component
 defineOptions({ layout: AdminLayout });
 
 const props = defineProps({
     record: Object,
     signatureUrl: String,
+    appSettings: String,
 });
+
+const companyLogo = '/images/logo.png';  
+const companyAddress = props.appSettings?.company_address || '648 Newark Ave.';
+const companyCity = props.appSettings?.company_city || 'Elizabeth';
+const companyState = props.appSettings?.company_state || 'NJ';
+const companyZip = props.appSettings?.company_zip || '07208';
+const companyEmail = props.appSettings?.company_email || 'info@pledgeenvironmental.com';
+const companyPhone = props.appSettings?.company_phone || '(609) 208-5535';
+const companyName = props.appSettings?.app_name || 'Pledge Environmental LLC';
+const njdca = props.appSettings?.company_njdca || '00862-E';
+const cOwner = props.appSettings?.company_owner || 'Saheed Alex Adeyeri';
+
+// Emit event to the parent
+const emit = defineEmits();
 
 // Method to format date from YYYY-MM-DD to MM/DD/YYYY
 const formatDate = (dateString) => {

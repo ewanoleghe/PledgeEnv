@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\AppSetting;
 
 class XRFMail extends Mailable
 {
@@ -16,14 +17,20 @@ class XRFMail extends Mailable
 
     public $xrfData;
     public $pdfPath;
+    public $settings;
+    public $companyEmail;
+    public $companyPhone;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($record, $pdfPath)
+    public function __construct($record, $pdfPath, $settings, $companyEmail, $companyPhone)
     {
         $this->record = $record;
         $this->pdfPath = $pdfPath;
+        $this->settings = $settings;
+        $this->companyEmail = $companyEmail;
+        $this->companyPhone = $companyPhone;
     }
 
     /**
@@ -74,14 +81,24 @@ class XRFMail extends Mailable
             \Log::error("PDF Attachment Missing: {$pdfFullPath}");
             return $this->markdown('XRFMail')
                         ->subject('XRF Report: Lead Based Paint Inspection')
-                        ->with('data', $data);
+                        ->with([
+                            'data' => $data,
+                            'settings' => $this->settings,
+                            'companyEmail' => $this->companyEmail,
+                            'companyPhone' => $this->companyPhone, 
+                        ]);
         }
 
-        return $this->from(env('MAIL_FROM_ADDRESS'))
-                    ->replyTo(env('ADMIN_EMAIL'))
+        return $this->from($this->companyEmail)
+                    ->replyTo($this->companyEmail)
                     ->subject('Lead Based Paint Inspection Report')
                     ->markdown('XRFMail')
-                    ->with('data', $data)
+                    ->with([
+                        'data' => $data,
+                        'settings' => $this->settings,
+                        'companyEmail' => $this->companyEmail,
+                        'companyPhone' => $this->companyPhone,
+                    ])
                     ->attach($pdfFullPath, [
                         'as' => "Xrf_Report_{$this->record->id}.pdf",
                         'mime' => 'application/pdf',

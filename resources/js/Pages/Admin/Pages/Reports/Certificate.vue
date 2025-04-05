@@ -13,21 +13,20 @@ defineOptions({ layout: AdminLayout });
 const props = defineProps({
     record: Object,
     signatureUrl: String,
-    settings: Object, // Add settings prop
+    appSettings: String,
 });
 
 const companyLogo = '/images/logo.png';  
-const stateLogo = '/images/stateLogo.png';  
-// Use settings from props with fallbacks
-const companyAddress = props.settings?.company_address || '648 Newark Ave.';
-const companyCity = props.settings?.company_city || 'Elizabeth';
-const companyState = props.settings?.company_state || 'NJ';
-const companyZip = props.settings?.company_zip || '07208';
-const companyEmail = props.settings?.company_email || 'info@pledgeenvironmental.com';
-const companyPhone = props.settings?.company_phone || '(609) 208-5535';
-const companyName = props.settings?.app_name || 'Pledge Environmental LLC';
-const njdca = props.settings?.company_njdca || '00862-E';
-const cOwner = props.settings?.company_owner || 'Saheed Alex Adeyeri';
+const companyAddress = props.appSettings?.company_address || '648 Newark Ave.';
+const companyCity = props.appSettings?.company_city || 'Elizabeth';
+const companyState = props.appSettings?.company_state || 'NJ';
+const companyZip = props.appSettings?.company_zip || '07208';
+const companyEmail = props.appSettings?.company_email || 'info@pledgeenvironmental.com';
+const companyPhone = props.appSettings?.company_phone || '(609) 208-5535';
+const companyName = props.appSettings?.app_name || 'Pledge Environmental LLC';
+const njdca = props.appSettings?.company_njdca || '00862-E';
+const cOwner = props.appSettings?.company_owner || 'Saheed Alex Adeyeri';
+
 
 // Method to format date from YYYY-MM-DD to MM/DD/YYYY
 const formatDate = (dateString) => {

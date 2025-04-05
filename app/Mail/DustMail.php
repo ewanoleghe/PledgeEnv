@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\AppSetting;
 use App\Services\ReportGenerator; // PDF Service
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\AppSetting;
 
 class DustMail extends Mailable
 {
@@ -17,18 +17,24 @@ class DustMail extends Mailable
 
     public $record;
     public $signatureUrl;
+    public $settings;
+    public $companyEmail;
+    public $companyPhone;
     public $xrfData;
     public $pdfPath;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($record, $pdfPath, $signatureUrl, $xrfData)
+    public function __construct($record, $pdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone)
     {
         $this->record = $record;
         $this->pdfPath = $pdfPath;
         $this->signatureUrl = $signatureUrl;
         $this->xrfData = $xrfData;
+        $this->settings = $settings;
+        $this->companyEmail = $companyEmail;
+        $this->companyPhone = $companyPhone;
     }
 
     /**
@@ -83,17 +89,21 @@ class DustMail extends Mailable
                         ->subject('Lead Based Paint Inspection Report')
                         ->with([
                             'data' => $data,
-                            'settings' => $settings,
+                            'settings' => $this->settings,
+                            'companyEmail' => $this->companyEmail,
+                            'companyPhone' => $this->companyPhone, 
                         ]);
         }
 
-        return $this->from(env('MAIL_FROM_ADDRESS'))
-                    ->replyTo(env('ADMIN_EMAIL'))
+        return $this->from($this->companyEmail)
+                    ->replyTo($this->companyEmail)
                     ->subject('Dust Wipe Report: Lead Based Paint Inspection')
                     ->markdown('DustMail')
                     ->with([
                         'data' => $data,
-                        'settings' => $settings,
+                        'settings' => $this->settings,
+                        'companyEmail' => $this->companyEmail,
+                        'companyPhone' => $this->companyPhone,
                     ])
                     ->attach($pdfFullPath, [
                         'as' => "Dust_Wipe_Report_{$this->record->id}.pdf",

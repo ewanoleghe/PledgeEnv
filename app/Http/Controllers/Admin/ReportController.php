@@ -264,57 +264,61 @@ class ReportController extends Controller
 
     //  View Report Resources
     public function viewResources(Request $request, $id = null)
-    {
-        // Ensure the user is authenticated before serving the file
-        if (!Auth::check()) {
-            abort(403, 'Unauthorized access');
-        }
-
-        // Retrieve the single record by its ID, including related photos and inspector
-        $record = Record::with(['photos', 'inspector'])->findOrFail($id);
-
-        // Generate the signature URL if the inspector exists and has a signature
-        $signatureUrl = $record->inspector && $record->inspector->signature
-            ? route('admin.signature.show', ['filename' => $record->inspector->signature])
-            : null;
-
-        // Load and process the XRF data from a JSON file
-        $jsonFilePath = storage_path('app/public/json/xrf_data/1_xrf_data.json');
-        
-        // Check if the JSON file exists
-        if (file_exists($jsonFilePath)) {
-            $jsonData = json_decode(file_get_contents($jsonFilePath), true);
-
-            // Filter rows where 'Concentration' > 1.0
-            $filteredData = array_filter($jsonData, function ($row) {
-                return isset($row['Concentration']) && $row['Concentration'] > 1.0;
-            });
-
-            // Select the desired columns
-            $selectedColumns = array_map(function ($row) {
-                return [
-                    'Concentration' => $row['Concentration'],
-                    'Room' => $row['Room'],
-                    'Structure' => $row['Structure'],
-                    'Member' => $row['Member'],
-                    'Substrate' => $row['Substrate'],
-                    'Wall' => $row['Wall'],
-                ];
-            }, $filteredData);
-        } else {
-            $selectedColumns = [];
-        }
-
-        // Return the view with all relevant data
-        $pageName = 'View Report Resources';
-
-        return Inertia::render('Admin/Pages/ViewRecord', [
-            'record' => $record,
-            'pageName' => $pageName,
-            'signatureUrl' => $signatureUrl,
-            'xrfData' => $selectedColumns,
-        ]);
+{
+    // Ensure the user is authenticated before serving the file
+    if (!Auth::check()) {
+        abort(403, 'Unauthorized access');
     }
+
+    // Retrieve the single record by its ID, including related photos and inspector
+    $record = Record::with(['photos', 'inspector'])->findOrFail($id);
+
+    // Generate the signature URL if the inspector exists and has a signature
+    $signatureUrl = $record->inspector && $record->inspector->signature
+        ? route('admin.signature.show', ['filename' => $record->inspector->signature])
+        : null;
+
+    // Load and process the XRF data from a JSON file
+    $jsonFilePath = storage_path('app/public/json/xrf_data/1_xrf_data.json');
+    
+    // Check if the JSON file exists
+    if (file_exists($jsonFilePath)) {
+        $jsonData = json_decode(file_get_contents($jsonFilePath), true);
+
+        // Filter rows where 'Concentration' > 1.0
+        $filteredData = array_filter($jsonData, function ($row) {
+            return isset($row['Concentration']) && $row['Concentration'] > 1.0;
+        });
+
+        // Select the desired columns
+        $selectedColumns = array_map(function ($row) {
+            return [
+                'Concentration' => $row['Concentration'],
+                'Room' => $row['Room'],
+                'Structure' => $row['Structure'],
+                'Member' => $row['Member'],
+                'Substrate' => $row['Substrate'],
+                'Wall' => $row['Wall'],
+            ];
+        }, $filteredData);
+    } else {
+        $selectedColumns = [];
+    }
+
+    // Fetch the app settings (assuming you have only one record)
+    $appSettings = AppSetting::first(); // or AppSetting::find(1) if you have a specific id
+
+    // Return the view with all relevant data
+    $pageName = 'View Report Resources';
+
+    return Inertia::render('Admin/Pages/ViewRecord', [
+        'record' => $record,
+        'pageName' => $pageName,
+        'signatureUrl' => $signatureUrl,
+        'xrfData' => $selectedColumns,
+        'appSettings' => $appSettings, // <-- now sending appSettings too
+    ]);
+}
 
 // Get the signature URL
 public function showSignature($filename)
@@ -437,8 +441,12 @@ protected function updateRecordFiles(Record $record, $imagePaths)
         $email = $record->property_owner_email;
         $xrfData = $record->xrf_data ?? 'default-xrf-data';
         $mailClasses = [];
-        $settings = AppSetting::all(); // Fetch all settings
-        $companyEmail = $settings->where('key', 'company_email')->first()->value ?? 'info@pledgeenvironmental.com';
+        // Fetch settings (assuming there's only one row)
+        $settings = AppSetting::first();
+
+        // Get company email and phone from settings
+        $companyEmail = $settings->company_email ?? 'Email Not Set';
+        $companyPhone = $settings->company_phone ?? 'Phone Not Set';
 
         // Normalize includeXrf to boolean
         $includeXrf = filter_var($record->includeXrf, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? false;
@@ -454,13 +462,13 @@ protected function updateRecordFiles(Record $record, $imagePaths)
         // Condition 1: Visual Inspection, No XRF
         if ($record->methodology === 'Visual Inspection' && !$includeXrf) {
             \Log::debug("Condition 1 matched: Visual Inspection, No XRF");
-            $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+            $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone);
         }
 
         // Condition 2: Dust Wipe Sampling, No XRF
         if ($record->methodology === 'Dust Wipe Sampling' && !$includeXrf) {
             \Log::debug("Condition 2 matched: Dust Wipe Sampling, No XRF");
-            $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+            $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone);
         }
 
         // Condition 3: XRF Pass
@@ -468,17 +476,17 @@ protected function updateRecordFiles(Record $record, $imagePaths)
             $includeXrf && 
             $record->xrf_pass_fail === 'pass') {
             \Log::debug("Condition 3 matched: XRF Pass");
-            $mailClasses[] = new XRFMail($record, $mergedPdfPath);
+            $mailClasses[] = new XRFMail($record, $mergedPdfPath, $settings, $companyEmail, $companyPhone);
         }
 
         // Condition 4: XRF Fail
         if ($includeXrf && $record->xrf_pass_fail === 'fail') {
             if ($record->methodology === 'Visual Inspection') {
                 \Log::debug("Condition 4 matched: Visual Inspection, XRF Fail");
-                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone);
             } elseif ($record->methodology === 'Dust Wipe Sampling') {
                 \Log::debug("Condition 4 matched: Dust Wipe Sampling, XRF Fail");
-                $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+                $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone);
             }
         }
 
@@ -486,11 +494,11 @@ protected function updateRecordFiles(Record $record, $imagePaths)
         if (empty($mailClasses)) {
             \Log::warning("No specific condition matched, falling back to methodology-based email");
             if ($record->methodology === 'Visual Inspection') {
-                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone);
             } elseif ($record->methodology === 'Dust Wipe Sampling') {
-                $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+                $mailClasses[] = new DustMail($record, $mergedPdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone);
             } else {
-                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData);
+                $mailClasses[] = new VisualMail($record, $mergedPdfPath, $signatureUrl, $xrfData, $settings, $companyEmail, $companyPhone);
             }
         }
 

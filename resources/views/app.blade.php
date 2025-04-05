@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta itemprop="name" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <meta name="description" content="Pledge Environmental promotes environmental safety and public health through expert lead evaluation and assessment service to residential, governmental, and commercial clients throughout the U.S." />
   {{-- font-awesome  --}}

@@ -17,8 +17,8 @@
 <p>Thank you for trusting us with this evaluation.</p>
 
 <p>Thanks,<br>{{ $settings->app_name ?? config('app.name') }}<br>
-    Email: {{ $settings->company_email ?? 'Email Not Set' }}<br>
-    Phone: {{ $settings->company_phone ?? 'Phone Not Set' }}</p>
+    Email: {{ $companyEmail }}<br>
+    Phone: {{ $companyPhone }}</p>
 
 </div>
 </x-mail::message>
